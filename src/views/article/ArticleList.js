@@ -62,7 +62,7 @@ class ArticleList extends Component {
     })
     getArticleList().then((res) => {
       this.setState({
-        data: res.data,
+        data: res.data.result,
         loading: false
       })
     })
