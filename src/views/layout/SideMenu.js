@@ -72,7 +72,7 @@ class SideNenu extends Component {
 		return (
 			<Sider trigger={null} collapsible collapsed={collapse.isCollapsed} theme={type} className="app-sider">
 				<div className="logo" style={{ color: type === 'dark' ? '#ffffffa6' : '' }}>
-					Logo
+					Admin
 				</div>
 				<Menu style={{ height: '50px' }} theme={type} defaultOpenKeys={[menuOpened]} defaultSelectedKeys={[menuSelected]} selectedKeys={[menuSelected]} mode="inline">
 					{this.renderMenu(menus)}

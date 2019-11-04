@@ -12,6 +12,17 @@ export const menus = [
 		title: '首页',
 		icon: 'home'
 	},
+  {
+    path: '/article',
+    title: '文章管理',
+    icon: 'form',
+    children: [
+      {
+        path: '/article/list',
+        title: '文章列表'
+      }
+    ]
+  },
 	{
 		path: '/icon',
 		title: '图标',

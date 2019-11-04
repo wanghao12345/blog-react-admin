@@ -22,6 +22,7 @@ import Other from '../views/control/Other';
 import MenuOne from '../views/levelMenu/MenuOne';
 import MenuTwo from '../views/levelMenu/MenuTwo';
 import About from '../views/about/About';
+import ArticleList from '../views/article/ArticleList';
 
 export const routes = [
 	{ path: '/dashboard', component: Dashboard },
@@ -47,5 +48,8 @@ export const routes = [
 	{ path: '/news', component: News },
 	{ path: '/error/404', component: Error404 },
 	{ path: '/error/500', component: Error500 },
-	{ path: '/about', component: About }
+	{ path: '/about', component: About },
+
+
+	{ path: '/article/list', component: ArticleList }
 ];
