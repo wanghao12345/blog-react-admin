@@ -61,9 +61,13 @@ class ArticleList extends Component {
       loading: true
     })
     getArticleList().then((res) => {
+      const pagination = { ...this.state.pagination };
+      pagination.total = res.data.total;
+      pagination.pageSize = res.data.size;
       this.setState({
         data: res.data.result,
-        loading: false
+        loading: false,
+        pagination
       })
     })
   }
@@ -76,6 +80,7 @@ class ArticleList extends Component {
           columns={this.state.columns}
           dataSource={this.state.data}
           rowKey={record => record.id}
+          pagination={this.state.pagination}
         />
       </div>
     );
