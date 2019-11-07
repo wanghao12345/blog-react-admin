@@ -8,7 +8,10 @@ class ArticleList extends Component {
     super(props);
     this.state = {
       data: [],
-      pagination: {},
+      pagination: {
+      	size: 1,
+				current: 1
+			},
       loading: false,
       columns: [
         {
@@ -30,7 +33,7 @@ class ArticleList extends Component {
           title: '操作',
           dataIndex: 'operate',
           key: 'operate',
-          width: 170,
+          width: 180,
           render: () => (
             <span>
               <Button type="primary">编辑</Button>
@@ -40,6 +43,7 @@ class ArticleList extends Component {
         }
       ]
     };
+    this.handleTableChange = this.handleTableChange.bind(this)
   }
 
   componentWillMount() {
@@ -53,6 +57,36 @@ class ArticleList extends Component {
     };
   }
 
+
+	render() {
+		return (
+			<div className="shadow-radius">
+				<Table
+					bordered
+					columns={this.state.columns}
+					dataSource={this.state.data}
+					rowKey={record => record.id}
+					pagination={this.state.pagination}
+					onChange={this.handleTableChange}
+				/>
+			</div>
+		);
+	}
+
+	/**
+	 * 分页
+	 */
+	handleTableChange (pagination) {
+		const pager = { ...this.state.pagination };
+		pager.current = pagination.current;
+		this.setState({
+			pagination: pager
+		});
+		this.getArticleData()
+	}
+
+
+
   /**
    * 获取文章列表数据
    */
@@ -60,7 +94,10 @@ class ArticleList extends Component {
     this.setState({
       loading: true
     })
-    getArticleList().then((res) => {
+    getArticleList({
+			p: this.state.current,
+			size: this.state.size
+		}).then((res) => {
       const pagination = { ...this.state.pagination };
       pagination.total = res.data.total;
       pagination.pageSize = res.data.size;
@@ -72,19 +109,6 @@ class ArticleList extends Component {
     })
   }
 
-  render() {
-    return (
-      <div className="shadow-radius">
-        <Table
-          bordered
-          columns={this.state.columns}
-          dataSource={this.state.data}
-          rowKey={record => record.id}
-          pagination={this.state.pagination}
-        />
-      </div>
-    );
-  }
 }
 
 export default ArticleList;

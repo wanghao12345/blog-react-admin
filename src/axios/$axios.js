@@ -3,7 +3,7 @@ import { message } from 'antd';
 const $axios = axios.create({
 	// baseURL: process.env.REACT_APP_BASE_URL,
 	baseURL: 'http://127.0.0.1:8080',
-	timeout: 6000,
+	timeout: 6000000000,
 	retry:4,
 	retryDelay:1000
 });
