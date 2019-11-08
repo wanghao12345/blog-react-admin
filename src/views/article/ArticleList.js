@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Button } from 'antd';
-import { getArticleList } from '../../axios/ApiArticle'
+import { getArticleList } from '../../api/ApiArticle'
 
 class ArticleList extends Component {
 
@@ -9,7 +9,8 @@ class ArticleList extends Component {
     this.state = {
       data: [],
       pagination: {
-      	size: 1,
+      	size: 10,
+				total: 0,
 				current: 1
 			},
       loading: false,
@@ -81,8 +82,9 @@ class ArticleList extends Component {
 		pager.current = pagination.current;
 		this.setState({
 			pagination: pager
+		}, () => {
+			this.getArticleData()
 		});
-		this.getArticleData()
 	}
 
 
@@ -95,14 +97,14 @@ class ArticleList extends Component {
       loading: true
     })
     getArticleList({
-			p: this.state.current,
-			size: this.state.size
+			p: this.state.pagination.current,
+			size: this.state.pagination.size
 		}).then((res) => {
       const pagination = { ...this.state.pagination };
-      pagination.total = res.data.total;
-      pagination.pageSize = res.data.size;
+      pagination.total = res.total;
+      pagination.pageSize = res.size;
       this.setState({
-        data: res.data.result,
+        data: res.list,
         loading: false,
         pagination
       })

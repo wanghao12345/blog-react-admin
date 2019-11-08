@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Table, Row, Col, Button, Form, Select } from 'antd';
-import $axios from '../../axios/$axios';
+import $axios from '../../config/$axios';
 const FormItem = Form.Item;
 const { Option } = Select;
 class TableSearch extends Component {
