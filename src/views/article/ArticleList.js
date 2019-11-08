@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom'
 import { Table, Button } from 'antd';
 import { getArticleList } from '../../api/ApiArticle'
+import '@/assets/css/article.scss'
 
 class ArticleList extends Component {
 
@@ -37,7 +39,7 @@ class ArticleList extends Component {
           width: 180,
           render: () => (
             <span>
-              <Button type="primary">编辑</Button>
+              <Button type="primary"><Link to="/article/edit">编辑</Link></Button>
               <Button type="danger" style={{'marginLeft' : '9px'}}>删除</Button>
             </span>
           )
@@ -62,6 +64,9 @@ class ArticleList extends Component {
 	render() {
 		return (
 			<div className="shadow-radius">
+				<div className="btn-box">
+					<Button size='large'><Link to="/article/add">增加</Link></Button>
+				</div>
 				<Table
 					bordered
 					columns={this.state.columns}

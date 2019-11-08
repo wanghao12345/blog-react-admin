@@ -20,7 +20,15 @@ export const menus = [
       {
         path: '/article/list',
         title: '文章列表'
-      }
+      },
+			{
+				path: '/article/add',
+				title: '文章增加'
+			},
+			{
+				path: '/article/edit',
+				title: '文章编辑'
+			}
     ]
   },
 	{

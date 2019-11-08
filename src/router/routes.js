@@ -23,6 +23,8 @@ import MenuOne from '../views/levelMenu/MenuOne';
 import MenuTwo from '../views/levelMenu/MenuTwo';
 import About from '../views/about/About';
 import ArticleList from '../views/article/ArticleList';
+import ArticleAdd from '../views/article/ArticleAdd';
+import ArticleEdit from '../views/article/ArticleEdit';
 
 export const routes = [
 	{ path: '/dashboard', component: Dashboard },
@@ -51,5 +53,7 @@ export const routes = [
 	{ path: '/about', component: About },
 
 
-	{ path: '/article/list', component: ArticleList }
+	{ path: '/article/list', component: ArticleList },
+	{ path: '/article/add', component: ArticleAdd },
+	{ path: '/article/edit', component: ArticleEdit }
 ];
