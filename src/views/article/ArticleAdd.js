@@ -30,7 +30,9 @@ class ArticleAdd extends React.Component{
 		super(props);
 		this.state = {
 			loading: false,
-			editorContent: ''
+			editorContent: '',
+			checkedTop: false,
+			fileList: []
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this)
@@ -83,6 +85,7 @@ class ArticleAdd extends React.Component{
 									name="avatar"
 									listType="picture-card"
 									className="avatar-uploader"
+									fileList={this.state.fileList}
 									showUploadList={false}
 									action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
 									beforeUpload={beforeUpload}
@@ -104,34 +107,24 @@ class ArticleAdd extends React.Component{
 							})(<TextArea rows={4} placeholder="请输入文章简介" />)}
 					</Form.Item>
 					<Form.Item label="文章内容：">
-						{
-							getFieldDecorator('content', {
-								rules: [
-									{
-										required: true,
-										message: '请输入文章内容'
-									}
-								]
-							})(
-								<div className="text-area" >
-									<div
-										ref="editorElemMenu"
-										style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
-										className="editorElem-menu">
-									</div>
-									<div
-										style={{
-											padding:"0 10px",
-											height:300,
-											border:"1px solid #ccc",
-											overflow: "auto",
-											borderTop: "none"
-										}}
-										ref="editorElemBody"
-										className="editorElem-body">
-									</div>
-								</div>
-							)}
+						<div className="text-area" >
+							<div
+								ref="editorElemMenu"
+								style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
+								className="editorElem-menu">
+							</div>
+							<div
+								style={{
+									padding:"0 10px",
+									height:300,
+									border:"1px solid #ccc",
+									overflow: "auto",
+									borderTop: "none"
+								}}
+								ref="editorElemBody"
+								className="editorElem-body">
+							</div>
+						</div>
 					</Form.Item>
 					<Form.Item label="创建时间：">
 						{
@@ -148,7 +141,7 @@ class ArticleAdd extends React.Component{
 						{
 							getFieldDecorator('top', {
 
-							})(<Checkbox>是否置顶</Checkbox>)}
+							})(<Checkbox checked={this.state.checkedTop}>是否置顶</Checkbox>)}
 					</Form.Item>
 					<Form.Item wrapperCol={{ span: 4, offset: 6 }}>
 						<Button type="primary" htmlType="submit">
