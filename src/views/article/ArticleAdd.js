@@ -14,6 +14,7 @@ import {
 import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
 import { getBase64 } from '@/utils/base64'
+import { baseUrl } from '@/config/env'
 import '@/assets/css/article.scss'
 
 const { TextArea } = Input
@@ -50,7 +51,7 @@ class ArticleAdd extends React.Component{
 		const uploadButton = (
 			<div>
 				<Icon type={this.state.loading ? 'loading' : 'plus'} />
-				<div className="ant-upload-text">上传中...</div>
+				<div className="ant-upload-text">上传</div>
 			</div>
 		);
 
@@ -87,9 +88,14 @@ class ArticleAdd extends React.Component{
 									className="avatar-uploader"
 									fileList={this.state.fileList}
 									showUploadList={false}
-									action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+									action= {baseUrl + '/upload/file'}
 									beforeUpload={beforeUpload}
 									onChange={this.handleChange}
+									data={(file) => {
+										return {
+											file: file
+										}
+									}}
 								>
 									{imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
 								</Upload>
