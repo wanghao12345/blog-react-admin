@@ -33,7 +33,8 @@ class ArticleAdd extends React.Component{
 			loading: false,
 			editorContent: '',
 			checkedTop: false,
-			fileList: []
+			fileList: [],
+			editor: null
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this)
@@ -113,41 +114,50 @@ class ArticleAdd extends React.Component{
 							})(<TextArea rows={4} placeholder="请输入文章简介" />)}
 					</Form.Item>
 					<Form.Item label="文章内容：">
-						<div className="text-area" >
-							<div
-								ref="editorElemMenu"
-								style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
-								className="editorElem-menu">
-							</div>
-							<div
-								style={{
-									padding:"0 10px",
-									height:300,
-									border:"1px solid #ccc",
-									overflow: "auto",
-									borderTop: "none"
-								}}
-								ref="editorElemBody"
-								className="editorElem-body">
-							</div>
-						</div>
-					</Form.Item>
-					<Form.Item label="创建时间：">
 						{
-							getFieldDecorator('createTime', {
+							getFieldDecorator('content', {
 								rules: [
 									{
 										required: true,
 										message: '请选择创建时间'
 									}
 								]
-							})(<DatePicker showTime placeholder="请选择创建时间" />)}
+							})(<div className="text-area" >
+								<div
+									ref="editorElemMenu"
+									style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
+									className="editorElem-menu">
+								</div>
+								<div
+									style={{
+										padding:"0 10px",
+										height:300,
+										border:"1px solid #ccc",
+										overflow: "auto",
+										borderTop: "none"
+									}}
+									ref="editorElemBody"
+									className="editorElem-body">
+								</div>
+							</div>)}
+					</Form.Item>
+					<Form.Item label="创建时间：">
+						{
+							getFieldDecorator('createTime', {
+								rules: [
+									{
+										type: 'object',
+										required: true,
+										message: '请选择创建时间'
+									}
+								]
+							})(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择创建时间" />)}
 					</Form.Item>
 					<Form.Item label="置顶：">
 						{
 							getFieldDecorator('top', {
-
-							})(<Checkbox checked={this.state.checkedTop}>是否置顶</Checkbox>)}
+								valuePropName: 'checked'
+							})(<Checkbox onChange={() => {}}>是否置顶</Checkbox>)}
 					</Form.Item>
 					<Form.Item wrapperCol={{ span: 4, offset: 6 }}>
 						<Button type="primary" htmlType="submit">
@@ -164,6 +174,9 @@ class ArticleAdd extends React.Component{
 	 */
 	handleSubmit = e => {
 		e.preventDefault();
+		this.props.form.setFieldsValue({
+			content: this.state.editor.txt.html()
+		})
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log('Received values of form: ', values);
@@ -229,6 +242,9 @@ class ArticleAdd extends React.Component{
 		]
 		editor.customConfig.uploadImgShowBase64 = true
 		editor.create()
+		this.setState({
+			editor: editor
+		})
 	}
 
 }
