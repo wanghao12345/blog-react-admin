@@ -105,13 +105,17 @@ class ArticleList extends Component {
 			p: this.state.pagination.current,
 			size: this.state.pagination.size
 		}).then((res) => {
-      const pagination = { ...this.state.pagination };
-      pagination.total = res.total;
-      pagination.pageSize = res.size;
+		  if (res.status === 200) {
+        const pagination = { ...this.state.pagination };
+        pagination.total = res.data.result.total;
+        pagination.pageSize = res.data.result.size;
+        this.setState({
+          data: res.data.result.list,
+          pagination
+        })
+      }
       this.setState({
-        data: res.list,
         loading: false,
-        pagination
       })
     })
   }
