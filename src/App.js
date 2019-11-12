@@ -6,6 +6,10 @@ import store from '@/redux/store';
 import './assets/css/app';
 import './assets/css/common';
 
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
+
 class App extends React.Component {
 	render() {
 		return (

@@ -8,13 +8,13 @@ import {
 	Button,
 	Upload,
 	Icon,
-	DatePicker,
 	Checkbox
 } from 'antd'
 import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
 import { getBase64 } from '@/utils/base64'
 import { baseUrl } from '@/config/env'
+import moment from 'moment'
 import '@/assets/css/article.scss'
 
 const { TextArea } = Input
@@ -34,7 +34,8 @@ class ArticleAdd extends React.Component{
 			editorContent: '',
 			checkedTop: false,
 			fileList: [],
-			editor: null
+			editor: null,
+      uploadImgUrl: ''
 		};
 
 		this.handleSubmit = this.handleSubmit.bind(this)
@@ -57,7 +58,7 @@ class ArticleAdd extends React.Component{
 		);
 
 		return (
-			<div>
+			<div className="shadow-radius">
 				<Form
 					{...formItemLayout}
 					onSubmit={this.handleSubmit}
@@ -141,18 +142,6 @@ class ArticleAdd extends React.Component{
 								</div>
 							</div>)}
 					</Form.Item>
-					<Form.Item label="创建时间：">
-						{
-							getFieldDecorator('createTime', {
-								rules: [
-									{
-										type: 'object',
-										required: true,
-										message: '请选择创建时间'
-									}
-								]
-							})(<DatePicker showTime format="YYYY-MM-DD HH:mm:ss" placeholder="请选择创建时间" />)}
-					</Form.Item>
 					<Form.Item label="置顶：">
 						{
 							getFieldDecorator('top', {
@@ -175,10 +164,13 @@ class ArticleAdd extends React.Component{
 	handleSubmit = e => {
 		e.preventDefault();
 		this.props.form.setFieldsValue({
-			content: this.state.editor.txt.html()
-		})
+			content: this.state.editor.txt.html(),
+      coverImage: this.state.uploadImgUrl
+		});
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
+        let params = values;
+        params.createTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 				console.log('Received values of form: ', values);
 			}
 		});
@@ -188,19 +180,22 @@ class ArticleAdd extends React.Component{
 	 * 上传图片后
 	 */
 	handleChange = info => {
-		if (info.file.status === 'uploading') {
+    if (info.file.status === 'uploading') {
 			this.setState({ loading: true });
-			return;
 		}
 		if (info.file.status === 'done') {
-			// Get this url from response in real world.
 			getBase64(info.file.originFileObj, imageUrl =>
 				this.setState({
 					imageUrl,
-					loading: false,
+          uploadImgUrl: info.file.response.data.url,
+					loading: false
 				}),
 			);
 		}
+
+		this.setState({
+      fileList: [info.fileList[info.fileList.length - 1]]
+    })
 	};
 
 	/**
