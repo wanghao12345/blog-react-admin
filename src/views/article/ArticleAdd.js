@@ -14,6 +14,7 @@ import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
 import { getBase64 } from '@/utils/base64'
 import { baseUrl } from '@/config/env'
+import { addArticle } from '../../api/ApiArticle'
 import moment from 'moment'
 import '@/assets/css/article.scss'
 
@@ -170,6 +171,9 @@ class ArticleAdd extends React.Component{
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
         let params = values;
+        addArticle(params).then(res => {
+          console.log(res);
+        })
         params.createTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
 				console.log('Received values of form: ', values);
 			}
