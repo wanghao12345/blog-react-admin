@@ -108,7 +108,6 @@ class ArticleList extends Component {
 		  if (res.status === 200) {
         const pagination = { ...this.state.pagination };
         pagination.total = res.data.result.total;
-        pagination.pageSize = res.data.result.size;
         this.setState({
           data: res.data.result.list,
           pagination

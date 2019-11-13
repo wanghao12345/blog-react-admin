@@ -10,6 +10,7 @@ import {
 	Icon,
 	Checkbox
 } from 'antd'
+import { withRouter } from 'react-router'
 import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
 import { getBase64 } from '@/utils/base64'
@@ -38,7 +39,6 @@ class ArticleAdd extends React.Component{
 			editor: null,
       uploadImgUrl: ''
 		};
-
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
@@ -49,6 +49,7 @@ class ArticleAdd extends React.Component{
 	render () {
 		const { getFieldDecorator } = this.props.form;
 		const { imageUrl } = this.state;
+		const { history } = this.props;
 
 		// 上传图片的loading
 		const uploadButton = (
@@ -62,7 +63,7 @@ class ArticleAdd extends React.Component{
 			<div className="shadow-radius">
 				<Form
 					{...formItemLayout}
-					onSubmit={this.handleSubmit}
+					onSubmit={this.handleSubmit.bind(this)}
 				>
 					<Form.Item label="文章标题：">
 						{
@@ -171,11 +172,12 @@ class ArticleAdd extends React.Component{
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
         let params = values;
-        addArticle(params).then(res => {
-          console.log(res);
-        })
         params.createTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-				console.log('Received values of form: ', values);
+        addArticle(params).then(res => {
+          if (res.status === 200) {
+            this.props.history.push('/article/list')
+          }
+        })
 			}
 		});
 	};
@@ -250,4 +252,4 @@ class ArticleAdd extends React.Component{
 
 const ArticleAddForm = Form.create({})(ArticleAdd)
 
-export default ArticleAddForm
+export default  withRouter(ArticleAddForm)
