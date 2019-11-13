@@ -1,5 +1,6 @@
 import {baseUrl} from './env'
 import axios from 'axios'
+import { message } from 'antd'
 
 export default async (type = 'GET', url = '', data = {}, callback) => {
   url = baseUrl + url
@@ -14,7 +15,6 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       url = url + '?' + dataStr
     }
   }
-	console.log(url);
 	return new Promise((resolve, reject) => {
     axios({
       url: url,
@@ -28,7 +28,8 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       let result = res.data
         resolve(result)
     }).catch(res => {
-      resolve(res.response.data)
+      // resolve(res.response.data)
+      message.error('请求失败！');
     })
   })
 }
