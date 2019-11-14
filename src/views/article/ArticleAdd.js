@@ -13,7 +13,6 @@ import {
 import { withRouter } from 'react-router'
 import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
-import { getBase64 } from '@/utils/base64'
 import { baseUrl } from '@/config/env'
 import { addArticle } from '../../api/ApiArticle'
 import moment from 'moment'
@@ -49,7 +48,6 @@ class ArticleAdd extends React.Component{
 	render () {
 		const { getFieldDecorator } = this.props.form;
 		const { imageUrl } = this.state;
-		const { history } = this.props;
 
 		// 上传图片的loading
 		const uploadButton = (
@@ -190,13 +188,11 @@ class ArticleAdd extends React.Component{
 			this.setState({ loading: true });
 		}
 		if (info.file.status === 'done') {
-			getBase64(info.file.originFileObj, imageUrl =>
-				this.setState({
-					imageUrl,
-          uploadImgUrl: info.file.response.data.url,
-					loading: false
-				}),
-			);
+      this.setState({
+        imageUrl: baseUrl + info.file.response.data.url,
+        uploadImgUrl: info.file.response.data.url,
+        loading: false
+      })
 		}
 
 		this.setState({
