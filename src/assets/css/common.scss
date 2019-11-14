@@ -24,3 +24,16 @@
 }
 
 
+/*******table border问题*******/
+.ant-table-bordered{
+  .ant-table-thead{
+    th{
+      border-top: 1px solid #e8e8e8;
+    }
+    th:first-child{
+      border-left: 1px solid #e8e8e8;
+    }
+  }
+}
+
+

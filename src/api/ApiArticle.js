@@ -5,3 +5,6 @@ export const getArticleList = (data) => axios('get', `/api/article/list`, data)
 
 // 文章增加
 export const addArticle = (data) => axios('post', `/api/article/add`, data)
+
+// 文章删除
+export const deleteArticle = (id) => axios('delete', `/api/article/delete/${id}`, {})

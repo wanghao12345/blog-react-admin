@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import { Table, Button } from 'antd';
-import { getArticleList } from '../../api/ApiArticle'
+import { Table, Button, Popconfirm, message } from 'antd';
+import { getArticleList, deleteArticle } from '../../api/ApiArticle'
 import '@/assets/css/article.scss'
 
 class ArticleList extends Component {
@@ -36,17 +36,31 @@ class ArticleList extends Component {
           title: '操作',
           dataIndex: 'operate',
           key: 'operate',
+          fixed: 'right',
           width: 180,
-          render: () => (
+          render: (text, record) => (
             <span>
               <Button type="primary"><Link to="/article/edit">编辑</Link></Button>
-              <Button type="danger" style={{'marginLeft' : '9px'}}>删除</Button>
+              <Popconfirm
+                title="确定删除吗？"
+                onConfirm={() => {
+                  this.handleDeleteClick(record)
+                }}
+                okText="确定"
+                cancelText="取消"
+              >
+                <Button
+                  type="danger"
+                  style={{'marginLeft' : '9px'}}
+                >删除</Button>
+              </Popconfirm>
             </span>
           )
         }
       ]
     };
     this.handleTableChange = this.handleTableChange.bind(this)
+    this.handleDeleteClick = this.handleDeleteClick.bind(this)
   }
 
   componentWillMount() {
@@ -70,6 +84,7 @@ class ArticleList extends Component {
 				<Table
 					bordered
 					columns={this.state.columns}
+          loading={this.state.loading}
 					dataSource={this.state.data}
 					rowKey={record => record.id}
 					pagination={this.state.pagination}
@@ -91,8 +106,6 @@ class ArticleList extends Component {
 			this.getArticleData()
 		});
 	}
-
-
 
   /**
    * 获取文章列表数据
@@ -116,6 +129,20 @@ class ArticleList extends Component {
       this.setState({
         loading: false,
       })
+    })
+  }
+
+
+  /**
+   * 删除
+   */
+  handleDeleteClick(record) {
+    deleteArticle(record.id).then(res => {
+      if (res.status === 200) {
+        message.success("删除成功", 1, () => {
+          this.getArticleData()
+        })
+      }
     })
   }
 
