@@ -1,8 +1,10 @@
 import {baseUrl} from './env'
 import axios from 'axios'
 import { message } from 'antd'
+import store from '../redux/store'
 
 export default async (type = 'GET', url = '', data = {}, callback) => {
+  const state = store.getState()
   url = baseUrl + url
   if (type.toUpperCase() === 'GET') { // 拼接参数
     let dataStr = ''
@@ -21,7 +23,8 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       method: type,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': state.token
       },
       data: data
     }).then(res => {

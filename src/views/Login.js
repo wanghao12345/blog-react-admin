@@ -3,6 +3,8 @@ import Particles from 'react-particles-js';
 import { Form, Icon, Input, Button } from 'antd';
 import { connect } from 'react-redux';
 import { setUserInfo } from '@/redux/actions/userInfo';
+import { setToken } from '@/redux/actions/token';
+import { postLogin } from '@/api/ApiUser'
 import '@/assets/css/login';
 
 const FormItem = Form.Item;
@@ -16,11 +18,17 @@ class Login extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				localStorage.setItem('isLogin', '1');
-				// 模拟生成一些数据
-				this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
-				localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
-				this.props.history.push('/dashboard');
+			  console.log(123)
+
+        postLogin(values).then(res => {
+          if (res.status === 200) {
+            this.props.setToken(res.data.token);
+            this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
+            localStorage.setItem('isLogin', '1');
+            localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
+            this.props.history.push('/dashboard');
+          }
+        });
 			} else {
 				console.log(err);
 			}
@@ -59,7 +67,7 @@ class Login extends Component {
 					<div className="title">后台管理系统</div>
 					<Form className="login-form">
 						<FormItem>
-							{getFieldDecorator('userName', {
+							{getFieldDecorator('username', {
 								rules: [{ required: true, message: '请填写用户名！' }]
 							})(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />)}
 						</FormItem>
@@ -85,7 +93,10 @@ const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
 	setUserInfo: data => {
 		dispatch(setUserInfo(data));
-	}
+	},
+  setToken: data => {
+	  dispatch(setToken(data))
+  }
 });
 export default connect(
 	mapStateToProps,

@@ -6,3 +6,4 @@ export const SET_BREADCRUMB = 'SET_BREADCRUMB';
 export const SET_TAGS = 'SET_TAGS';
 export const SET_THEME = 'SET_THEME';
 export const SET_COLLAPSE = 'SET_COLLAPSE';
+export const SET_TOKEN = 'SET_TOKEN';
