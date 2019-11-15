@@ -40,6 +40,7 @@
     "for-editor": "^0.2.6",
     "fs-extra": "7.0.1",
     "html-webpack-plugin": "4.0.0-beta.5",
+    "http-proxy-middleware": "^0.20.0",
     "identity-obj-proxy": "3.0.0",
     "is-wsl": "^1.1.0",
     "jest": "24.7.1",
@@ -168,5 +169,5 @@
       ]
     ]
   },
-  "repository": "git@github.com:chenjun1127/react-antd-admin.git"
+  "repository": "https://github.com/wanghao12345/blog-react-admin.git"
 }

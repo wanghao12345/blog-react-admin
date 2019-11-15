@@ -7,7 +7,12 @@ const history = createHashHistory()
 
 export default async (type = 'GET', url = '', data = {}, callback) => {
   const state = store.getState()
-  url = baseUrl + url
+	let axiosBaseUrl = baseUrl
+	if (url !== '/login') {
+		axiosBaseUrl = axiosBaseUrl + '/api'
+	}
+
+
   if (type.toUpperCase() === 'GET') { // 拼接参数
     let dataStr = ''
     Object.keys(data).forEach(key => {
@@ -22,6 +27,7 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
 	return new Promise((resolve, reject) => {
     axios({
       url: url,
+			baseURL: axiosBaseUrl,
       method: type,
       headers: {
         'Accept': 'application/json',
