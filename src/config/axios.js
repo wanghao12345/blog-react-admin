@@ -2,6 +2,8 @@ import {baseUrl} from './env'
 import axios from 'axios'
 import { message } from 'antd'
 import store from '../redux/store'
+import { createHashHistory } from 'history';
+const history = createHashHistory()
 
 export default async (type = 'GET', url = '', data = {}, callback) => {
   const state = store.getState()
@@ -31,8 +33,14 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       let result = res.data
         resolve(result)
     }).catch(res => {
-      // resolve(res.response.data)
-      message.error('请求失败！');
+			switch(res.response.status){
+				case 401:
+					history.push('/login')
+					break;
+				default:
+					break;
+			}
+      message.error(res.response.data.message);
     })
   })
 }
