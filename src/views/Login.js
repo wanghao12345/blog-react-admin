@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Particles from 'react-particles-js';
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, message, Spin } from 'antd';
 import { connect } from 'react-redux';
 import { setUserInfo } from '@/redux/actions/userInfo';
 import { setToken } from '@/redux/actions/token';
@@ -9,7 +9,10 @@ import '@/assets/css/login';
 
 const FormItem = Form.Item;
 class Login extends Component {
-	state = { clientHeight: document.documentElement.clientHeight || document.body.clientHeight };
+	state = {
+		clientHeight: document.documentElement.clientHeight || document.body.clientHeight,
+		loading: false
+	};
 	constructor(props) {
 		super(props);
 		this.onResize = this.onResize.bind(this);
@@ -18,16 +21,21 @@ class Login extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-			  console.log(123)
-
+				this.setState({loading: true})
         postLogin(values).then(res => {
+					this.setState({loading: false})
           if (res.status === 200) {
+						message.success(res.message);
+
             this.props.setToken(res.data.token);
             this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
             localStorage.setItem('isLogin', '1');
+            localStorage.setItem('token', res.data.token);
             localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
             this.props.history.push('/dashboard');
-          }
+          } else {
+						message.error(res.message);
+					}
         });
 			} else {
 				console.log(err);
@@ -50,40 +58,42 @@ class Login extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="container">
-				<Particles
-					height={this.state.clientHeight - 5 + 'px'}
-					params={{
-						number: { value: 50 },
-						ize: { value: 3 },
-						interactivity: {
-							events: {
-								onhover: { enable: true, mode: 'repulse' }
+			<Spin spinning={this.state.loading}>
+				<div className="container">
+					<Particles
+						height={this.state.clientHeight - 5 + 'px'}
+						params={{
+							number: { value: 50 },
+							ize: { value: 3 },
+							interactivity: {
+								events: {
+									onhover: { enable: true, mode: 'repulse' }
+								}
 							}
-						}
-					}}
-				/>
-				<div className="content">
-					<div className="title">后台管理系统</div>
-					<Form className="login-form">
-						<FormItem>
-							{getFieldDecorator('username', {
-								rules: [{ required: true, message: '请填写用户名！' }]
-							})(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />)}
-						</FormItem>
-						<FormItem>
-							{getFieldDecorator('password', {
-								rules: [{ required: true, message: '请填写密码！' }]
-							})(<Input.Password prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="密码" />)}
-						</FormItem>
-						<FormItem>
-							<Button type="primary" htmlType="submit" block onClick={this.login}>
-								登录
-							</Button>
-						</FormItem>
-					</Form>
+						}}
+					/>
+					<div className="content">
+						<div className="title">后台管理系统</div>
+						<Form className="login-form">
+							<FormItem>
+								{getFieldDecorator('username', {
+									rules: [{ required: true, message: '请填写用户名！' }]
+								})(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="用户名" />)}
+							</FormItem>
+							<FormItem>
+								{getFieldDecorator('password', {
+									rules: [{ required: true, message: '请填写密码！' }]
+								})(<Input.Password prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="密码" />)}
+							</FormItem>
+							<FormItem>
+								<Button type="primary" htmlType="submit" block onClick={this.login}>
+									登录
+								</Button>
+							</FormItem>
+						</Form>
+					</div>
 				</div>
-			</div>
+			</Spin>
 		);
 	}
 }

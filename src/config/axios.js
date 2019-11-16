@@ -32,7 +32,7 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': state.token
+        'Authorization': localStorage.getItem('token')
       },
       data: data
     }).then(res => {
