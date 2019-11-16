@@ -30,7 +30,8 @@ class ArticleList extends Component {
         {
           title: '创建时间',
           dataIndex: 'createTime',
-          key: 'createTime'
+          key: 'createTime',
+					width: 200,
         },
         {
           title: '操作',
@@ -40,7 +41,9 @@ class ArticleList extends Component {
           width: 180,
           render: (text, record) => (
             <span>
-              <Button type="primary"><Link to="/article/edit">编辑</Link></Button>
+              <Button type="primary">
+								<Link to={'/article/edit/' + record.id}>编辑</Link>
+							</Button>
               <Popconfirm
                 title="确定删除吗？"
                 onConfirm={() => {

@@ -8,7 +8,8 @@ import {
 	Button,
 	Upload,
 	Icon,
-	Checkbox
+	Checkbox,
+	Select
 } from 'antd'
 import { withRouter } from 'react-router'
 import E from 'wangeditor'
@@ -18,7 +19,8 @@ import { addArticle } from '../../api/ApiArticle'
 import moment from 'moment'
 import '@/assets/css/article.scss'
 
-const { TextArea } = Input
+const { TextArea } = Input;
+const { Option } = Select
 // 表单布局
 const formItemLayout = {
 	labelCol: { span: 4 },
@@ -36,7 +38,21 @@ class ArticleAdd extends React.Component{
 			checkedTop: false,
 			fileList: [],
 			editor: null,
-      uploadImgUrl: ''
+      uploadImgUrl: '',
+			articleTypeList: [
+				{
+					id: 1,
+					name: '前端技术'
+				},
+				{
+					id: 2,
+					name: '后端技术'
+				},
+				{
+					id: 3,
+					name: '其它文章'
+				}
+			]
 		};
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
@@ -47,7 +63,7 @@ class ArticleAdd extends React.Component{
 
 	render () {
 		const { getFieldDecorator } = this.props.form;
-		const { imageUrl } = this.state;
+		const { imageUrl, articleTypeList } = this.state;
 
 		// 上传图片的loading
 		const uploadButton = (
@@ -73,6 +89,26 @@ class ArticleAdd extends React.Component{
 									}
 								]
 							})(<Input placeholder="请输入文章标题" />)}
+					</Form.Item>
+					<Form.Item label="文章类型：">
+						{
+							getFieldDecorator('typeId', {
+								rules: [
+									{
+										required: true,
+										message: '请选择文章类型'
+									}
+								]
+							})(
+								<Select placeholder="请选择文章类型">
+
+									{
+										articleTypeList.map((res) => {
+											return <Option value={res.id} key={res.id}>{res.name}</Option>
+										})
+									}
+								</Select>
+							)}
 					</Form.Item>
 					<Form.Item label="封面图片：">
 						{
@@ -170,6 +206,8 @@ class ArticleAdd extends React.Component{
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
         let params = values;
+        let userInfo = localStorage.getItem('userInfo')
+				params.userId = JSON.parse(userInfo).role.type
         params.createTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
         addArticle(params).then(res => {
           if (res.status === 200) {
@@ -209,9 +247,7 @@ class ArticleAdd extends React.Component{
 		const editor = new E(elemMenu,elemBody)
 		// 使用 onchange 函数监听内容的变化，并实时更新到 state 中
 		editor.customConfig.onchange = html => {
-			console.log(editor.txt.html())
 			this.setState({
-				// editorContent: editor.txt.text()
 				editorContent: editor.txt.html()
 			})
 		}

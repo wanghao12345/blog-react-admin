@@ -28,10 +28,10 @@ class Login extends Component {
 						message.success(res.message);
 
             this.props.setToken(res.data.token);
-            this.props.setUserInfo(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } }));
+            this.props.setUserInfo(Object.assign({}, values, { role: { type: res.data.result.id, name: res.data.result.nickname } }));
             localStorage.setItem('isLogin', '1');
             localStorage.setItem('token', res.data.token);
-            localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: 1, name: '超级管理员' } })));
+            localStorage.setItem('userInfo', JSON.stringify(Object.assign({}, values, { role: { type: res.data.result.id, name: res.data.result.nickname } })));
             this.props.history.push('/dashboard');
           } else {
 						message.error(res.message);

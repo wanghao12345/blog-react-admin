@@ -55,5 +55,5 @@ export const routes = [
 
 	{ path: '/article/list', component: ArticleList },
 	{ path: '/article/add', component: ArticleAdd },
-	{ path: '/article/edit', component: ArticleEdit }
+	{ path: '/article/edit/:id', component: ArticleEdit }
 ];
