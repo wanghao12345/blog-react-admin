@@ -9,13 +9,13 @@ import {
 	Upload,
 	Icon,
 	Checkbox,
-	Select
-} from 'antd'
+	Select, Spin
+} from 'antd';
 import { withRouter } from 'react-router'
 import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
 import { baseUrl } from '@/config/env'
-import { addArticle } from '../../api/ApiArticle'
+import { getArticleDetail, putArticle } from '../../api/ApiArticle'
 import moment from 'moment'
 import '@/assets/css/article.scss'
 
@@ -33,6 +33,8 @@ class ArticleEdit extends React.Component{
 	constructor(props) {
 		super(props);
 		this.state = {
+			id: '',
+			loadingDom: false,
 			loading: false,
 			editorContent: '',
 			checkedTop: false,
@@ -59,6 +61,7 @@ class ArticleEdit extends React.Component{
 
 	componentDidMount () {
 		this.initWangEditor()
+		this.getArticleDetail()
 	}
 
 	render () {
@@ -74,124 +77,158 @@ class ArticleEdit extends React.Component{
 		);
 
 		return (
-			<div className="shadow-radius">
-				<Form
-					{...formItemLayout}
-					onSubmit={this.handleSubmit.bind(this)}
-				>
-					<Form.Item label="文章标题：">
-						{
-							getFieldDecorator('title', {
-								rules: [
-									{
-										required: true,
-										message: '请输入文章标题'
-									}
-								]
-							})(<Input placeholder="请输入文章标题" />)}
-					</Form.Item>
-					<Form.Item label="文章类型：">
-						{
-							getFieldDecorator('typeId', {
-								rules: [
-									{
-										required: true,
-										message: '请选择文章类型'
-									}
-								]
-							})(
-								<Select placeholder="请选择文章类型">
-
-									{
-										articleTypeList.map((res) => {
-											return <Option value={res.id} key={res.id}>{res.name}</Option>
-										})
-									}
-								</Select>
-							)}
-					</Form.Item>
-					<Form.Item label="封面图片：">
-						{
-							getFieldDecorator('coverImage', {
-								rules: [
-									{
-										required: true,
-										message: '请选择文章封面图片'
-									}
-								]
-							})(
-								<Upload
-									name="avatar"
-									listType="picture-card"
-									className="avatar-uploader"
-									fileList={this.state.fileList}
-									showUploadList={false}
-									action= {baseUrl + '/upload/file'}
-									beforeUpload={beforeUpload}
-									onChange={this.handleChange}
-									data={(file) => {
-										return {
-											file: file
+			<Spin spinning={this.state.loadingDom}>
+				<div className="shadow-radius">
+					<Form
+						{...formItemLayout}
+						onSubmit={this.handleSubmit.bind(this)}
+					>
+						<Form.Item label="文章标题：">
+							{
+								getFieldDecorator('title', {
+									rules: [
+										{
+											required: true,
+											message: '请输入文章标题'
 										}
-									}}
-								>
-									{imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-								</Upload>
-							)}
-					</Form.Item>
-					<Form.Item label="文章简介：">
-						{
-							getFieldDecorator('description', {
-								rules: [
-									{
-										required: true,
-										message: '请输入文章简介'
-									}
-								]
-							})(<TextArea rows={4} placeholder="请输入文章简介" />)}
-					</Form.Item>
-					<Form.Item label="文章内容：">
-						{
-							getFieldDecorator('content', {
-								rules: [
-									{
-										required: true,
-										message: '请选择创建时间'
-									}
-								]
-							})(<div className="text-area" >
-								<div
-									ref="editorElemMenu"
-									style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
-									className="editorElem-menu">
-								</div>
-								<div
-									style={{
-										padding:"0 10px",
-										height:300,
-										border:"1px solid #ccc",
-										overflow: "auto",
-										borderTop: "none"
-									}}
-									ref="editorElemBody"
-									className="editorElem-body">
-								</div>
-							</div>)}
-					</Form.Item>
-					<Form.Item label="置顶：">
-						{
-							getFieldDecorator('top', {
-								valuePropName: 'checked'
-							})(<Checkbox onChange={() => {}}>是否置顶</Checkbox>)}
-					</Form.Item>
-					<Form.Item wrapperCol={{ span: 4, offset: 6 }}>
-						<Button type="primary" htmlType="submit">
-							提交
-						</Button>
-					</Form.Item>
-				</Form>
-			</div>
+									]
+								})(<Input placeholder="请输入文章标题" />)}
+						</Form.Item>
+						<Form.Item label="文章类型：">
+							{
+								getFieldDecorator('typeId', {
+									rules: [
+										{
+											required: true,
+											message: '请选择文章类型'
+										}
+									]
+								})(
+									<Select placeholder="请选择文章类型">
+
+										{
+											articleTypeList.map((res) => {
+												return <Option value={res.id} key={res.id}>{res.name}</Option>
+											})
+										}
+									</Select>
+								)}
+						</Form.Item>
+						<Form.Item label="封面图片：">
+							{
+								getFieldDecorator('coverImage', {
+									rules: [
+										{
+											required: true,
+											message: '请选择文章封面图片'
+										}
+									]
+								})(
+									<Upload
+										name="avatar"
+										listType="picture-card"
+										className="avatar-uploader"
+										fileList={this.state.fileList}
+										showUploadList={false}
+										action= {baseUrl + '/upload/file'}
+										beforeUpload={beforeUpload}
+										onChange={this.handleChange}
+										data={(file) => {
+											return {
+												file: file
+											}
+										}}
+									>
+										{imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
+									</Upload>
+								)}
+						</Form.Item>
+						<Form.Item label="文章简介：">
+							{
+								getFieldDecorator('description', {
+									rules: [
+										{
+											required: true,
+											message: '请输入文章简介'
+										}
+									]
+								})(<TextArea rows={4} placeholder="请输入文章简介" />)}
+						</Form.Item>
+						<Form.Item label="文章内容：">
+							{
+								getFieldDecorator('content', {
+									rules: [
+										{
+											required: true,
+											message: '请选择创建时间'
+										}
+									]
+								})(<div className="text-area" >
+									<div
+										ref="editorElemMenu"
+										style={{backgroundColor:'#f1f1f1',border:"1px solid #ccc"}}
+										className="editorElem-menu">
+									</div>
+									<div
+										style={{
+											padding:"0 10px",
+											height:300,
+											border:"1px solid #ccc",
+											overflow: "auto",
+											borderTop: "none"
+										}}
+										ref="editorElemBody"
+										className="editorElem-body">
+									</div>
+								</div>)}
+						</Form.Item>
+						<Form.Item label="置顶：">
+							{
+								getFieldDecorator('top', {
+									valuePropName: 'checked'
+								})(<Checkbox onChange={() => {}}>是否置顶</Checkbox>)}
+						</Form.Item>
+						<Form.Item wrapperCol={{ span: 4, offset: 6 }}>
+							<Button type="primary" htmlType="submit">
+								提交
+							</Button>
+						</Form.Item>
+					</Form>
+				</div>
+			</Spin>
 		)
+	}
+
+	/**
+	 * 获取文章详情
+	 */
+	getArticleDetail () {
+		const id = this.props.match.params.id;
+		this.setState({
+			loadingDom: true,
+			id: id
+		});
+		getArticleDetail(id).then(res => {
+			if (res.status === 200) {
+				const data = res.data.data;
+				this.props.form.setFieldsValue({
+					content: data.content,
+					coverImage: data.coverImage,
+					description: data.description,
+					title: data.title,
+					top: data.top,
+					typeId: data.typeId,
+				});
+
+				this.state.editor.txt.html(data.content)
+				this.setState({
+					loadingDom: false,
+					imageUrl: baseUrl + data.coverImage,
+					uploadImgUrl: data.coverImage,
+				});
+			}
+		})
+
 	}
 
 	/**
@@ -208,8 +245,9 @@ class ArticleEdit extends React.Component{
 				let params = values;
 				let userInfo = localStorage.getItem('userInfo')
 				params.userId = JSON.parse(userInfo).role.type
-				params.createTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-				addArticle(params).then(res => {
+				params.updateTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+				params.id = parseInt(this.state.id);
+				putArticle(params).then(res => {
 					if (res.status === 200) {
 						this.props.history.push('/article/list')
 					}

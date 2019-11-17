@@ -1,13 +1,13 @@
 import {baseUrl} from './env'
 import axios from 'axios'
 import { message } from 'antd'
-import store from '../redux/store'
+// import store from '../redux/store'
 import { createHashHistory } from 'history';
 const history = createHashHistory()
 
 export default async (type = 'GET', url = '', data = {}, callback) => {
-  const state = store.getState()
-	let axiosBaseUrl = baseUrl
+  // const state = store.getState()
+	let axiosBaseUrl = baseUrl;
 	if (url !== '/login') {
 		axiosBaseUrl = axiosBaseUrl + '/api'
 	}
@@ -39,6 +39,9 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       let result = res.data
         resolve(result)
     }).catch(res => {
+    	if (!res.response) {
+    		return;
+			}
 			switch(res.response.status){
 				case 401:
 					history.push('/login')
