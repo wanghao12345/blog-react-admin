@@ -24,10 +24,6 @@ export const menus = [
 			{
 				path: '/article/add',
 				title: '文章增加'
-			},
-			{
-				path: '/article/edit',
-				title: '文章编辑'
 			}
     ]
   },
