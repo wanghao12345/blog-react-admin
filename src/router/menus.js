@@ -27,8 +27,25 @@ export const menus = [
 			}
     ]
   },
+  {
+    path: '/bizType',
+    title: '类型管理',
+    icon: 'menu',
+    children: [
+      {
+        path: '/bizType/list',
+        title: '类型列表'
+      },
+      {
+        path: '/bizType/add',
+        title: '类型增加'
+      }
+    ]
+  },
 
-/*	{
+
+/*
+	{
 		path: '/icon',
 		title: '图标',
 		icon: 'file'

@@ -25,6 +25,9 @@ import About from '../views/about/About';
 import ArticleList from '../views/article/ArticleList';
 import ArticleAdd from '../views/article/ArticleAdd';
 import ArticleEdit from '../views/article/ArticleEdit';
+import BizTypeList from '../views/bizType/BizTypeList';
+import BizTypeAdd from '../views/bizType/BizTypeAdd';
+import BizTypeEdit from '../views/bizType/BizTypeEdit';
 
 export const routes = [
 	{ path: '/dashboard', component: Dashboard },
@@ -52,8 +55,12 @@ export const routes = [
 	{ path: '/error/500', component: Error500 },
 	{ path: '/about', component: About },
 
-
+  // 文章
 	{ path: '/article/list', component: ArticleList },
 	{ path: '/article/add', component: ArticleAdd },
-	{ path: '/article/edit/:id', component: ArticleEdit }
+	{ path: '/article/edit/:id', component: ArticleEdit },
+  // 类型
+  { path: '/bizType/list', component: BizTypeList },
+  { path: '/bizType/add', component: BizTypeAdd },
+  { path: '/bizType/edit/:id', component: BizTypeEdit }
 ];
