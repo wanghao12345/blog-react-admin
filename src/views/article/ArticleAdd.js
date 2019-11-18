@@ -16,6 +16,7 @@ import E from 'wangeditor'
 import { beforeUpload } from '@/utils/FormMethods'
 import { baseUrl } from '@/config/env'
 import { addArticle } from '../../api/ApiArticle'
+import { getBizTypeList } from '../../api/ApiBizType'
 import moment from 'moment'
 import '@/assets/css/article.scss'
 
@@ -39,25 +40,13 @@ class ArticleAdd extends React.Component{
 			fileList: [],
 			editor: null,
       uploadImgUrl: '',
-			articleTypeList: [
-				{
-					id: 1,
-					name: '前端技术'
-				},
-				{
-					id: 2,
-					name: '后端技术'
-				},
-				{
-					id: 3,
-					name: '其它文章'
-				}
-			]
+			articleTypeList: []
 		};
 		this.handleSubmit = this.handleSubmit.bind(this)
 	}
 
 	componentDidMount () {
+	  this.getBizTypeList()
 		this.initWangEditor()
 	}
 
@@ -193,6 +182,19 @@ class ArticleAdd extends React.Component{
 			</div>
 		)
 	}
+
+  /**
+   * 类型列表
+   */
+	getBizTypeList() {
+    getBizTypeList().then(res => {
+      if (res.status === 200) {
+        this.setState({
+          articleTypeList: res.data.result.list
+        })
+      }
+    })
+  }
 
 	/**
 	 * 提交
