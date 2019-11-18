@@ -31,10 +31,10 @@ export default async (type = 'GET', url = '', data = {}, callback) => {
       method: type,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8',
         'Authorization': localStorage.getItem('token')
       },
-      data: data
+      data: JSON.stringify(data)
     }).then(res => {
       let result = res.data
         resolve(result)

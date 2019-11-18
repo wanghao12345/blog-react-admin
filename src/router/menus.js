@@ -27,7 +27,8 @@ export const menus = [
 			}
     ]
   },
-	{
+
+/*	{
 		path: '/icon',
 		title: '图标',
 		icon: 'file'
@@ -177,5 +178,6 @@ export const menus = [
 		path: '/about',
 		title: '关于',
 		icon: 'copyright'
-	}
+	}*/
+
 ];
