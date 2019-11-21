@@ -11,7 +11,6 @@ import { withRouter } from 'react-router'
 import { putBizType, getBizTypeDetail } from '../../api/ApiBizType'
 import moment from 'moment'
 import '@/assets/css/article.scss'
-import { getArticleDetail } from '../../api/ApiArticle';
 
 const { TextArea } = Input;
 // 表单布局
@@ -114,7 +113,8 @@ class BizTypeEdit extends React.Component{
           loading: true
         });
         let params = values;
-        params.createTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
+        params.id = this.state.id
+        params.updateTime = moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
         putBizType(params).then(res => {
           if (res.status === 200) {
             this.setState({
